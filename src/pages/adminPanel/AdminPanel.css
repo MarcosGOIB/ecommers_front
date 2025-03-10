@@ -1,1 +1,52 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
 
+.admin-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.add-product-btn {
+  margin-left: 15px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.product-image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+/* Estilos para la tabla */
+.product-table th {
+  background-color: #f8f9fa;
+  vertical-align: middle;
+}
+
+.product-table td {
+  vertical-align: middle;
+}
+
+/* Espaciado entre botones de acciones */
+.action-buttons .btn {
+  margin-right: 5px;
+}
+
+/* Estilo para el modal de producto */
+.product-form-container {
+  padding: 0 10px;
+}
+
+/* Estilos para mensajes de alerta */
+.alert-message {
+  margin-bottom: 20px;
+}
