@@ -1,6 +1,6 @@
-// URL base para peticiones a la API
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
-
-export default {
-  API_URL
+const config = {
+  // En producción (cuando se despliega en Netlify), usa la URL del backend en Render
+  API_URL: import.meta.env.VITE_API_URL || 'https://ecommerce-serv.onrender.com',
 };
+
+export default config;
