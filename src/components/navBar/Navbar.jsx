@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Acceso from "../../pages/acceso/Acceso.jsx";
 import axios from 'axios';
 import { useCart } from '../../context/CartContext';
-import './navbar.css'; 
+import './Navbar.css'; 
 import config from '../../config/config.js';
 
 const NavbarComponent = () => {
