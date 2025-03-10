@@ -1,0 +1,149 @@
+.categories-container {
+  padding: 2rem 0;
+}
+
+.categories-title {
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #333;
+  position: relative;
+}
+
+.categories-title:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #007bff;
+}
+
+.categories-row {
+  justify-content: center;
+}
+
+.category-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid #eaeaea;
+  margin-bottom: 20px;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-image-container {
+  height: 200px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.05);
+}
+
+.category-body {
+  padding: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.category-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.category-button {
+  width: 100%;
+  padding: 0.5rem 0;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Estilos responsive */
+@media (max-width: 992px) {
+  .category-col {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .category-image-container {
+    height: 180px;
+  }
+  
+  .category-body {
+    min-height: 100px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-col {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .category-card {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .category-image-container {
+    height: 160px;
+  }
+  
+  .category-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .category-col {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
+  .category-card {
+    max-width: 280px;
+  }
+  
+  .category-image-container {
+    height: 140px;
+  }
+  
+  .category-body {
+    min-height: 90px;
+    padding: 0.75rem;
+  }
+  
+  .category-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .category-button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+  }
+}

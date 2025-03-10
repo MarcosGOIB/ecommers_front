@@ -1,0 +1,79 @@
+html, body, #root {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+
+.footer {
+  margin-top: auto;
+}
+
+
+.footer-logo {
+  height: 45px;
+  width: auto;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+}
+
+.footer-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+
+.hover-white:hover {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+  color: white;
+}
+
+.bi-facebook,
+.bi-instagram {
+  font-size: 18px;
+}
+
+
+.social-icon:hover .bi-facebook {
+  color: #1877F2;
+}
+
+.social-icon:hover .bi-instagram {
+  color: #E1306C;
+}

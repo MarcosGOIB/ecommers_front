@@ -1,0 +1,100 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-nav {
+  margin: 0 auto;
+}
+
+.navbar-brand {
+  margin-right: auto;
+}
+
+.d-flex {
+  margin-left: auto;
+}
+
+.nav-link {
+  font-weight: bold;
+}
+
+.custom-carousel {
+  height: 700px; 
+  overflow: hidden; 
+}
+
+.custom-carousel .carousel-item {
+  height: 700px; 
+}
+
+.custom-carousel .carousel-item img {
+  width: 100%;
+  height: 100%; 
+  object-fit: cover; 
+}
+
+
+
+.news-carousel .carousel-control-prev-icon,
+.news-carousel .carousel-control-next-icon {
+  background-color: rgb(10, 10, 80); 
+  border-radius: 50%; 
+  padding: 10px; 
+}
+
+
+.news-carousel .carousel-control-prev {
+  width: 50px; 
+  left: -10px; 
+}
+
+
+.news-carousel .carousel-control-next {
+  width: 50px; 
+  right: -10px; 
+}
+
+.footer {
+  margin-top: 20px;
+}
+
