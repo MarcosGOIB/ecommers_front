@@ -13,19 +13,26 @@ const ProductCard = ({ product, onClick }) => {
     : parseFloat(product.price).toFixed(2);
 
   const getImageUrl = () => {
+    // Si hay un error de carga o no hay URL, usar una imagen por defecto
     if (!product.image_url || imageError) {
-      return defaultImage;
+      return 'https://via.placeholder.com/300?text=Imagen+no+disponible';
     }
 
+    // Si la URL ya es completa (comienza con http o https)
     if (product.image_url.startsWith('http')) {
       return product.image_url;
     }
 
+    // Si la URL comienza con una barra (ruta absoluta)
     if (product.image_url.startsWith('/')) {
-  
-      return `${config.API_URL}${product.image_url}`;
+      // Asegurar que no haya doble barra si API_URL termina con /
+      const baseUrl = config.API_URL.endsWith('/') 
+        ? config.API_URL.slice(0, -1) 
+        : config.API_URL;
+      return `${baseUrl}${product.image_url}`;
     }
 
+    // Para otros casos, asumir que es una ruta relativa a /uploads/
     return `${config.API_URL}/uploads/${product.image_url}`;
   };
 
