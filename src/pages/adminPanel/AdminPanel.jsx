@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Table, Button, Form, Modal, Alert } from 're
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import config from '../../config/config';
+import './AdminPanel.css'; // Importamos el CSS
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const AdminPanel = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
- 
+  // Lista de marcas de accesorios
   const accessoryBrands = [
     'Dragon Shield',
     'BCW',
@@ -37,7 +38,7 @@ const AdminPanel = () => {
     'Turtle'
   ];
 
- 
+  // Lista de tipos de juegos
   const gameTypes = [
     'One Piece',
     'Digimon',
@@ -50,7 +51,7 @@ const AdminPanel = () => {
     'Yu-Gi-Oh'
   ];
 
- 
+  // Verificar si el usuario es administrador
   useEffect(() => {
     const checkAdminStatus = async () => {
       setIsLoading(true);
@@ -69,14 +70,13 @@ const AdminPanel = () => {
         });
         
         if (response.data.user.role !== 'admin') {
-          
           navigate('/');
           return;
         }
         
         setIsAdmin(true);
         
-        
+        // Cargar datos
         fetchProducts();
         fetchCategories();
       } catch (error) {
@@ -90,7 +90,7 @@ const AdminPanel = () => {
     checkAdminStatus();
   }, [navigate]);
 
-
+  // Obtener productos
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -98,7 +98,7 @@ const AdminPanel = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      
+      // Formatear productos
       const formattedProducts = response.data.products.map(product => ({
         ...product,
         price: parseFloat(product.price),
@@ -112,7 +112,7 @@ const AdminPanel = () => {
     }
   };
 
-  
+  // Obtener categorías
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${config.API_URL}/api/products/categories`);
@@ -123,7 +123,7 @@ const AdminPanel = () => {
     }
   };
 
- 
+  // Mostrar mensaje de alerta
   const showAlertMessage = (variant, message) => {
     setAlert({
       show: true,
@@ -131,13 +131,13 @@ const AdminPanel = () => {
       message
     });
     
-   
+    // Ocultar después de 3 segundos
     setTimeout(() => {
       setAlert({ show: false, variant: '', message: '' });
     }, 3000);
   };
 
-  
+  // Manejar cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -146,11 +146,11 @@ const AdminPanel = () => {
     });
   };
 
-  
+  // Manejar cambio de categoría
   const handleCategoryChange = (e) => {
     const { value } = e.target;
     
-    
+    // Resetear brand y game_type al cambiar categoría
     setFormData({
       ...formData,
       category_id: value,
@@ -159,13 +159,13 @@ const AdminPanel = () => {
     });
   };
 
- 
+  // Obtener nombre de categoría seleccionada
   const getSelectedCategoryName = () => {
     const category = categories.find(cat => cat.id === parseInt(formData.category_id));
     return category ? category.name.toLowerCase() : '';
   };
 
-  
+  // Manejar cambio de imagen
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -178,7 +178,7 @@ const AdminPanel = () => {
     }
   };
 
-  
+  // Añadir nuevo producto
   const handleAddProduct = () => {
     setEditMode(false);
     setFormData({
@@ -197,7 +197,7 @@ const AdminPanel = () => {
     setShowModal(true);
   };
 
- 
+  // Editar producto existente
   const handleEditProduct = (product) => {
     setEditMode(true);
     setSelectedProduct(product);
@@ -218,12 +218,12 @@ const AdminPanel = () => {
     setShowModal(true);
   };
 
-  
+  // Cerrar modal
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  
+  // Subir imagen
   const uploadImage = async () => {
     if (!imageFile) return null;
 
@@ -247,14 +247,14 @@ const AdminPanel = () => {
     }
   };
 
-  
+  // Guardar producto
   const handleSaveProduct = async (e) => {
     e.preventDefault();
     
     try {
       const token = localStorage.getItem('token');
       
-     
+      // Subir imagen si hay una nueva
       let imageUrl = formData.image_url;
       if (imageFile) {
         const uploadedImageUrl = await uploadImage();
@@ -263,7 +263,7 @@ const AdminPanel = () => {
         }
       }
       
-    
+      // Preparar datos según la categoría
       const categoryName = getSelectedCategoryName();
       
       const productData = {
@@ -271,13 +271,13 @@ const AdminPanel = () => {
         price: parseFloat(formData.price),
         quantity: parseInt(formData.quantity),
         image_url: imageUrl,
-        
+        // Establecer brand solo para accesorios
         brand: categoryName === 'accesorios' ? formData.brand : '',
-        
+        // Establecer game_type solo para juegos o singles
         game_type: ['juegos de cartas', 'singles'].includes(categoryName) ? formData.game_type : ''
       };
       
-      
+      // Actualizar o crear producto
       if (editMode) {
         await axios.put(`${config.API_URL}/api/products/${selectedProduct.id}`, productData, {
           headers: { Authorization: `Bearer ${token}` }
@@ -290,7 +290,7 @@ const AdminPanel = () => {
         showAlertMessage('success', 'Producto creado con éxito');
       }
       
-      
+      // Cerrar modal y recargar productos
       handleCloseModal();
       fetchProducts();
     } catch (error) {
@@ -299,7 +299,7 @@ const AdminPanel = () => {
     }
   };
 
-  
+  // Eliminar producto
   const handleDeleteProduct = async (productId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
       try {
@@ -308,7 +308,7 @@ const AdminPanel = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-       
+        // Actualizar lista de productos
         setProducts(products.filter(product => product.id !== productId));
         showAlertMessage('success', 'Producto eliminado con éxito');
       } catch (error) {
@@ -332,7 +332,6 @@ const AdminPanel = () => {
     return null; 
   }
 
-
   const selectedCategoryName = getSelectedCategoryName();
   const isAccessories = selectedCategoryName === 'accesorios';
   const isCardGamesOrSingles = ['juegos de cartas', 'singles'].includes(selectedCategoryName);
@@ -342,21 +341,22 @@ const AdminPanel = () => {
       <h1 className="mb-4">Panel de Administración</h1>
       
       {alert.show && (
-        <Alert variant={alert.variant} dismissible onClose={() => setAlert({ ...alert, show: false })}>
+        <Alert variant={alert.variant} dismissible onClose={() => setAlert({ ...alert, show: false })} className="alert-message">
           {alert.message}
         </Alert>
       )}
       
       <Card className="mb-4">
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">Gestión de Productos</h3>
-          <Button variant="success" onClick={handleAddProduct}>
+        {/* Aquí está el cambio principal - usando la clase admin-header */}
+        <Card.Header className="admin-header">
+          <h3 className="admin-title">Gestión de Productos</h3>
+          <Button variant="success" className="add-product-btn" onClick={handleAddProduct}>
             Agregar Nuevo Producto
           </Button>
         </Card.Header>
         <Card.Body>
           <div className="table-responsive">
-            <Table striped bordered hover>
+            <Table striped bordered hover className="product-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -380,7 +380,7 @@ const AdminPanel = () => {
                     </td>
                     <td>${typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2)}</td>
                     <td>{product.quantity}</td>
-                    <td>
+                    <td className="action-buttons">
                       <Button 
                         variant="info" 
                         size="sm" 
@@ -410,13 +410,13 @@ const AdminPanel = () => {
         </Card.Body>
       </Card>
       
-     
+      {/* Modal para añadir/editar producto */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? 'Editar Producto' : 'Agregar Nuevo Producto'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSaveProduct}>
+          <Form onSubmit={handleSaveProduct} className="product-form-container">
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
@@ -474,7 +474,7 @@ const AdminPanel = () => {
               </Form.Select>
             </Form.Group>
             
-          
+            {/* Campos específicos según categoría */}
             {isAccessories && (
               <Form.Group className="mb-3">
                 <Form.Label>Marca</Form.Label>
@@ -548,7 +548,7 @@ const AdminPanel = () => {
                   <img 
                     src={imagePreview} 
                     alt="Vista previa" 
-                    style={{ maxWidth: '100%', maxHeight: '200px' }} 
+                    className="product-image-preview"
                   />
                 </div>
               )}
