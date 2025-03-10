@@ -62,7 +62,7 @@ const AdminPanel = () => {
       }
       
       try {
-        const response = await axios.get('${config.API_URL}/api/auth/profile', {
+        const response = await axios.get(`${config.API_URL}/api/auth/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -94,7 +94,7 @@ const AdminPanel = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('${config.API_URL}/api/products', {
+      const response = await axios.get(`${config.API_URL}/api/products`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -115,7 +115,7 @@ const AdminPanel = () => {
   
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('${config.API_URL}/api/products/categories');
+      const response = await axios.get(`${config.API_URL}/api/products/categories`);
       setCategories(response.data.categories);
     } catch (error) {
       console.error('Error al cargar categorías:', error);
@@ -232,7 +232,7 @@ const AdminPanel = () => {
       formDataImage.append('image', imageFile);
       
       const token = localStorage.getItem('token');
-      const response = await axios.post('${config.API_URL}/api/upload', formDataImage, {
+      const response = await axios.post(`${config.API_URL}/api/upload`, formDataImage, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -284,7 +284,7 @@ const AdminPanel = () => {
         });
         showAlertMessage('success', 'Producto actualizado con éxito');
       } else {
-        await axios.post('${config.API_URL}/api/products', productData, {
+        await axios.post(`${config.API_URL}/api/products`, productData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         showAlertMessage('success', 'Producto creado con éxito');
