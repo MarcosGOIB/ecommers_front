@@ -21,57 +21,66 @@ const NewsSection = () => {
   };
 
  
-  useEffect(() => {
+useEffect(() => {
     const fetchLatestProducts = async () => {
       setLoading(true);
       try {
-      
+        // Primero intentamos obtener los últimos productos
         const response = await axios.get(`${config.API_URL}/api/products/latest?limit=6`);
         console.log('Respuesta de latest products:', response.data);
         
-      
-        const formattedProducts = response.data.products.map(product => ({
-          ...product,
-          price: parseFloat(product.price)
-        }));
-        
-        setLatestProducts(formattedProducts);
+        // Verificamos si existe response.data.products antes de hacer map
+        if (response.data && Array.isArray(response.data.products)) {
+          const formattedProducts = response.data.products.map(product => ({
+            ...product,
+            price: parseFloat(product.price || 0)
+          }));
+          
+          setLatestProducts(formattedProducts);
+        } else {
+          // Si no hay productos en la respuesta pero la petición fue exitosa
+          console.log('Respuesta exitosa pero sin productos en el formato esperado');
+          setLatestProducts([]);
+        }
       } catch (err) {
         console.error('Error al cargar los últimos productos:', err);
         
-        
+        // Plan B: Obtener todos los productos y ordenarlos
         try {
           console.log('Intentando obtener todos los productos como alternativa...');
-         
+          
           const allProductsResponse = await axios.get(`${config.API_URL}/api/products`);
           console.log('Respuesta de todos los productos:', allProductsResponse.data);
           
-          let products = allProductsResponse.data.products || [];
-          
-        
-          products = products.sort((a, b) => {
-         
-            const dateFieldA = a.createdAt || a.updatedAt || a.fecha_creacion || a.id;
-            const dateFieldB = b.createdAt || b.updatedAt || b.fecha_creacion || b.id;
+          // Verificamos si existe allProductsResponse.data.products antes de continuar
+          if (allProductsResponse.data && Array.isArray(allProductsResponse.data.products)) {
+            let products = allProductsResponse.data.products || [];
             
-        
-            const dateA = typeof dateFieldA === 'string' ? new Date(dateFieldA) : dateFieldA;
-            const dateB = typeof dateFieldB === 'string' ? new Date(dateFieldB) : dateFieldB;
+            // Ordenamos los productos por fecha (o ID como último recurso)
+            products = products.sort((a, b) => {
+              const dateFieldA = a.createdAt || a.updatedAt || a.fecha_creacion || a.id;
+              const dateFieldB = b.createdAt || b.updatedAt || b.fecha_creacion || b.id;
+              
+              const dateA = typeof dateFieldA === 'string' ? new Date(dateFieldA) : dateFieldA;
+              const dateB = typeof dateFieldB === 'string' ? new Date(dateFieldB) : dateFieldB;
+              
+              return dateB - dateA;
+            });
             
-       
-            return dateB - dateA;
-          });
-          
-      
-          const latestProducts = products.slice(0, 6).map(product => ({
-            ...product,
-            price: parseFloat(product.price)
-          }));
-          
-          if (latestProducts.length > 0) {
-            console.log('Productos obtenidos y ordenados manualmente:', latestProducts);
-            setLatestProducts(latestProducts);
-            return; 
+            // Tomamos los primeros 6 productos
+            const latestProducts = products.slice(0, 6).map(product => ({
+              ...product,
+              price: parseFloat(product.price || 0)
+            }));
+            
+            if (latestProducts.length > 0) {
+              console.log('Productos obtenidos y ordenados manualmente:', latestProducts);
+              setLatestProducts(latestProducts);
+              return; 
+            }
+          } else {
+            console.log('No se encontraron productos en la respuesta alternativa');
+            setLatestProducts([]);
           }
         } catch (fallbackErr) {
           console.error('Error en el fallback:', fallbackErr);
