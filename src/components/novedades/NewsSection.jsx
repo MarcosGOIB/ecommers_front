@@ -11,7 +11,7 @@ const NewsSection = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-
+  // Función para dividir el array en grupos
   const chunkArray = (array, size) => {
     const chunkedArr = [];
     for (let i = 0; i < array.length; i += size) {
@@ -20,25 +20,27 @@ const NewsSection = () => {
     return chunkedArr;
   };
 
- 
-useEffect(() => {
+  useEffect(() => {
     const fetchLatestProducts = async () => {
       setLoading(true);
       try {
-        // Primero intentamos obtener los últimos productos
-        const response = await axios.get(`${config.API_URL}/api/products/latest?limit=6`);
-        console.log('Respuesta de latest products:', response.data);
+        // Cambio clave: usar la ruta correcta para obtener los productos
+        // En lugar de usar /latest, usamos la ruta normal pero con un límite y ordenamos por ID descendente
+        const response = await axios.get(`${config.API_URL}/api/products?limit=6`);
+        console.log('Respuesta de productos:', response.data);
         
         // Verificamos si existe response.data.products antes de hacer map
         if (response.data && Array.isArray(response.data.products)) {
-          const formattedProducts = response.data.products.map(product => ({
+          // Ordenamos los productos por ID descendente (asumiendo que IDs más altos son más recientes)
+          const sortedProducts = [...response.data.products].sort((a, b) => b.id - a.id);
+          
+          const formattedProducts = sortedProducts.map(product => ({
             ...product,
             price: parseFloat(product.price || 0)
           }));
           
           setLatestProducts(formattedProducts);
         } else {
-          // Si no hay productos en la respuesta pero la petición fue exitosa
           console.log('Respuesta exitosa pero sin productos en el formato esperado');
           setLatestProducts([]);
         }
@@ -56,16 +58,8 @@ useEffect(() => {
           if (allProductsResponse.data && Array.isArray(allProductsResponse.data.products)) {
             let products = allProductsResponse.data.products || [];
             
-            // Ordenamos los productos por fecha (o ID como último recurso)
-            products = products.sort((a, b) => {
-              const dateFieldA = a.createdAt || a.updatedAt || a.fecha_creacion || a.id;
-              const dateFieldB = b.createdAt || b.updatedAt || b.fecha_creacion || b.id;
-              
-              const dateA = typeof dateFieldA === 'string' ? new Date(dateFieldA) : dateFieldA;
-              const dateB = typeof dateFieldB === 'string' ? new Date(dateFieldB) : dateFieldB;
-              
-              return dateB - dateA;
-            });
+            // Ordenamos los productos por ID (asumiendo que IDs más altos son más recientes)
+            products = products.sort((a, b) => b.id - a.id);
             
             // Tomamos los primeros 6 productos
             const latestProducts = products.slice(0, 6).map(product => ({
@@ -88,7 +82,7 @@ useEffect(() => {
         
         setError('No se pudieron cargar las novedades. Por favor, intenta de nuevo más tarde.');
         
-      
+        // Fallback último con productos de ejemplo
         console.log('Usando productos de ejemplo como último recurso');
         setLatestProducts([
           {
@@ -127,34 +121,20 @@ useEffect(() => {
     fetchLatestProducts();
   }, []);
 
- 
+  // Determinar a dónde navegar cuando se hace clic en un producto
   const getProductDestination = (product) => {
     if (!product) return '/';
     
-    const category = product.category_name?.toLowerCase() || '';
-    
-    if (category.includes('cartas') || category.includes('juegos')) {
-      
-      if (product.game_type) {
-        return `/juegos-de-cartas?selectedCategory=${encodeURIComponent(product.game_type)}`;
-      }
-      return '/juegos-de-cartas';
-    } else if (category.includes('accesorios')) {
-      return '/accesorios';
-    } else if (category.includes('singles')) {  
-      return '/singles';
-    } else {
-      return `/producto/${product.id}`;
-    }
+    return `/producto/${product.id}`;
   };
 
- 
+  // Manejar clic en un producto
   const handleProductClick = (product) => {
     const destination = getProductDestination(product);
     navigate(destination);
   };
 
-  
+  // Mostrar spinner durante la carga inicial
   if (loading && latestProducts.length === 0) {
     return (
       <Container className="mt-5">
@@ -168,7 +148,7 @@ useEffect(() => {
     );
   }
 
-  
+  // Agrupar productos para el carrusel
   const groupedProducts = chunkArray(latestProducts, 3);
 
   return (
@@ -190,11 +170,11 @@ useEffect(() => {
                       <div className="news-card-image-container">
                         <Card.Img
                           variant="top"
-                          src={product.image_url || product.imageUrl || product.image || 'https://via.placeholder.com/300?text=Imagen+no+disponible'}
+                          src={product.image_url || product.imageUrl || product.image || 'https://placehold.co/300x300?text=Imagen+no+disponible'}
                           className="news-card-image"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = 'https://via.placeholder.com/300?text=Imagen+no+disponible';
+                            e.target.src = 'https://placehold.co/300x300?text=Imagen+no+disponible';
                           }}
                         />
                       </div>
